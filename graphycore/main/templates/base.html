@@ -31,7 +31,7 @@
             transition: 0.3s;
         }
         nav a:hover {
-            color: #f4a261;
+            color: #82ed3b;
         }
 
         .container {
@@ -52,6 +52,52 @@
             box-shadow: 0px 4px 10px rgba(36, 36, 36, 0.2);
             pointer-events: none;
         }
+        footer {
+            width: 100%;
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-container p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .start-now-btn {
+            display: inline-block;
+            background-color: #101111; 
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            text-align: center;
+            transition: background 0.3s, transform 0.2s ease-in-out;
+            box-shadow: 0px 4px 10px rgba(7, 37, 4, 0.2);
+        }
+
+        .start-now-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .start-now-btn:active {
+            transform: scale(0.98);
+        }
+
+
     </style>
 
 </head>
@@ -61,18 +107,11 @@
         <a href="{% url 'files' %}">Files</a>
         <a href="{% url 'about' %}">About</a>
     </nav>
-
-    <div class="container">
-        <h1>Welcome to Graphy 📊</h1>
-        <p>Visualizing data made simple.</p>
-        <div class="video-wrapper">
-            <video controls>
-                <source src="{% static 'videos/v.mp4' %}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
+    <footer>
+        <div class="footer-container">
+            <p>&copy; 2025 Graphy # Projects for fun</p>
         </div>
-    
-    </div>
+    </footer>
     
 </body>
 </html>
