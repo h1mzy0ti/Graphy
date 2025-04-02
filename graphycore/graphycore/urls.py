@@ -17,10 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from main.views import *
+from django.contrib.auth import views as auth_views
+handler404 = custom_404_view 
 urlpatterns = [
     path('', home,name="home"),
-    path('files/',files,name="files"),
+    path('files/',files,name="files",),
     path('about/',about,name="about"),
+    path('pricing/',pricing,name="pricing"),
     path('login/',user_login,name="user_login"),
     path('signup/',user_signup,name="user_signup")
 

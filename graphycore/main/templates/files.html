@@ -1,25 +1,8 @@
 {% include 'base.html' %}
-
 {% load static %}
 
-
-
-<div class="upload-container">
-    <form id="uploadForm" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <input type="file" id="fileInput" name="file" required hidden>
-        
-        <label for="fileInput">
-            <img src="{% static 'images/upload.png' %}" alt="Upload File" class="upload-image">
-        </label>
-
-        <button type="submit" id="uploadBtn" class="hidden">Upload</button>
-    </form>
-
-    <div id="loading" class="hidden">Uploading... ⏳</div>
-</div>
 <style>
+    /* Existing styles */
     .upload-container {
         text-align: center;
         margin-top: 20px;
@@ -35,12 +18,10 @@
         opacity: 0.8;
     }
 
-
     #uploadBtn {
         background-color: #1f1f20;
         color: white;
         padding: 8px 16px;
-        border: 25px;
         border-radius: 13px;
         cursor: pointer;
         transition: 0.3s;
@@ -59,7 +40,157 @@
     .hidden {
         display: none;
     }
+
+    /* Profile icon and dropdown */
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        position: relative;
+    }
+
+    .profile-container {
+        position: relative;
+    }
+
+    .profile-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #131313;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .profile-icon:hover {
+        background-color: #82ed3b;
+    }
+
+    .profile-icon img {
+        width: 24px;
+        height: 24px;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        right: 0;
+        top: 50px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 150px;
+        z-index: 100;
+        overflow: hidden;
+        display: none;
+    }
+
+    .dropdown-menu.show {
+        display: block;
+    }
+
+    .dropdown-item {
+        padding: 12px 15px;
+        text-decoration: none;
+        color: #131313;
+        display: block;
+        transition: 0.3s;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f4f4f4;
+        color: #82ed3b;
+    }
+
+    /* Space usage styles */
+    .space-usage-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .space-usage-circle {
+        width: 40px;
+        height: 40px;
+        position: relative;
+    }
+
+    .space-usage-circle svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+    }
+
+    .space-usage-circle circle {
+        fill: none;
+        stroke-width: 4;
+        stroke-linecap: round;
+    }
+
+    .space-usage-circle .background {
+        stroke: #e6e6e6;
+    }
+
+    .space-usage-circle .progress {
+        stroke: #82ed3b;
+        stroke-dasharray: 100;
+        stroke-dashoffset: calc(100 - var(--percentage, 0));
+        transition: stroke-dashoffset 0.5s ease;
+    }
+
+    .space-usage-text {
+        font-size: 14px;
+        color: #333;
+    }
 </style>
+
+<!-- Header with profile icon and space usage -->
+<div class="header-container">
+    <div class="space-usage-container">
+        <div class="space-usage-circle">
+            <svg viewBox="0 0 36 36">
+                <circle class="background" cx="18" cy="18" r="16"></circle>
+                <circle class="progress" cx="18" cy="18" r="16" style="--percentage: 35"></circle>
+            </svg>
+        </div>
+        <div class="space-usage-text">
+            <div>35% used</div>
+            <div>3.5 GB / 10 GB</div>
+        </div>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile-icon" id="profileIcon">
+            <img src="{% static 'images/user.png' %}" alt="Profile"
+                 onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\'></path><circle cx=\'12\' cy=\'7\' r=\'4\'></circle></svg>'">
+        </div>
+        <div class="dropdown-menu" id="profileDropdown">
+            <a href="#" class="dropdown-item">Profile</a>
+            <a href="#" class="dropdown-item">Premium</a>
+            <a class="dropdown-item">Logout</a>
+        </div>
+    </div>
+</div>
+
+<div class="upload-container">
+    <form id="uploadForm" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" id="fileInput" name="file" required hidden>
+        <label for="fileInput">
+            <img src="{% static 'images/upload.png' %}" alt="Upload File" class="upload-image">
+        </label>
+        <button type="submit" id="uploadBtn" class="hidden">Upload</button>
+    </form>
+
+    <div id="loading" class="hidden">Uploading... ⏳</div>
+</div>
+
+<div style="text-align: center; margin-top: 20px;">
+    <a href="{% url 'home' %}" class="start-now-btn">Go back ←</a>
+</div>
 
 <script>
     document.getElementById("fileInput").addEventListener("change", function() {
@@ -70,7 +201,23 @@
         document.getElementById("loading").classList.remove("hidden");
         document.getElementById("uploadBtn").disabled = true;
     });
+
+    document.getElementById("profileIcon").addEventListener("click", function() {
+        document.getElementById("profileDropdown").classList.toggle("show");
+    });
+
+    window.addEventListener("click", function(event) {
+        if (!event.target.closest(".profile-container")) {
+            document.getElementById("profileDropdown").classList.remove("show");
+        }
+    });
+
+    function updateSpaceUsage(usedSpace, totalSpace) {
+        const percentage = (usedSpace / totalSpace) * 100;
+        document.querySelector(".space-usage-circle .progress").style.setProperty("--percentage", percentage);
+        document.querySelector(".space-usage-text").innerHTML = `
+            <div>${Math.round(percentage)}% used</div>
+            <div>${usedSpace.toFixed(1)} GB / ${totalSpace} GB</div>
+        `;
+    }
 </script>
-<div style="text-align: center; margin-top: 20px;">
-    <a href="{% url 'home' %}" class="start-now-btn">Go back ←</a>
-</div>

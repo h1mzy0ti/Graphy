@@ -1,0 +1,39 @@
+{% include 'base.html' %}
+{% load static %}
+
+<div class="container">
+    <h1 class="text-center" style="margin-bottom: 20px;">Choose Your Plan</h1>
+    <p class="text-center" style="color: #666;">Flexible pricing for all users</p>
+    
+    <div class="pricing-container" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 30px;">
+        
+        <!-- Free Plan -->
+        <div class="pricing-card" style="background: #f8f9fa; padding: 20px; border-radius: 15px; text-align: center; width: 300px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+            <h3>Free</h3>
+            <p style="color: #333; font-size: 24px; font-weight: bold;">$0/month</p>
+            <p>30MB Storage</p>
+            <button class="pricing-btn" style="background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">Get Started</button>
+        </div>
+        
+        <!-- Standard Plan -->
+        <div class="pricing-card" style="background: #eef7ff; padding: 20px; border-radius: 15px; text-align: center; width: 300px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+            <h3>Standard</h3>
+            <p style="color: #333; font-size: 24px; font-weight: bold;">$1/month</p>
+            <p>220 MB Storage</p>
+            <button class="pricing-btn" style="background: #1E88E5; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">Upgrade</button>
+        </div>
+        
+        <!-- Custom Plan -->
+        <div class="pricing-card" style="background: #fff3cd; padding: 20px; border-radius: 15px; text-align: center; width: 300px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+            <h3>Custom</h3>
+            <p style="color: #333; font-size: 24px; font-weight: bold;">$1 per extra 50MB</p>
+            <p>First 50MB Free</p>
+            <button class="pricing-btn" style="background: #FF9800; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">Contact Us</button>
+        </div>
+        
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px;">
+        <a href="{% url 'home' %}" class="start-now-btn">Go back ←</a>
+    </div>
+</div>
