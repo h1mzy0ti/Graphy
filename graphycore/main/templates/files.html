@@ -1,6 +1,76 @@
 {% include 'base.html' %}
 
-<div>
-    <a href="{% url "home" %}" class="start-now-btn">Go back <-</a>
+{% load static %}
 
+
+
+<div class="upload-container">
+    <form id="uploadForm" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <input type="file" id="fileInput" name="file" required hidden>
+        
+        <label for="fileInput">
+            <img src="{% static 'images/upload.png' %}" alt="Upload File" class="upload-image">
+        </label>
+
+        <button type="submit" id="uploadBtn" class="hidden">Upload</button>
+    </form>
+
+    <div id="loading" class="hidden">Uploading... ⏳</div>
+</div>
+<style>
+    .upload-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .upload-image {
+        width: 100px; /* Adjust size */
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .upload-image:hover {
+        opacity: 0.8;
+    }
+
+
+    #uploadBtn {
+        background-color: #1f1f20;
+        color: white;
+        padding: 8px 16px;
+        border: 25px;
+        border-radius: 13px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    #uploadBtn:hover {
+        background-color: #245331;
+    }
+
+    #loading {
+        margin-top: 10px;
+        font-weight: bold;
+        color: #051401;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<script>
+    document.getElementById("fileInput").addEventListener("change", function() {
+        document.getElementById("uploadBtn").classList.remove("hidden");
+    });
+
+    document.getElementById("uploadForm").addEventListener("submit", function() {
+        document.getElementById("loading").classList.remove("hidden");
+        document.getElementById("uploadBtn").disabled = true;
+    });
+</script>
+<div style="text-align: center; margin-top: 20px;">
+    <a href="{% url 'home' %}" class="start-now-btn">Go back ←</a>
 </div>

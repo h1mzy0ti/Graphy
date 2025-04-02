@@ -20,6 +20,8 @@ from main.views import *
 urlpatterns = [
     path('', home,name="home"),
     path('files/',files,name="files"),
-    path('about/',about,name="about")
+    path('about/',about,name="about"),
+    path('login/',user_login,name="user_login"),
+    path('signup/',user_signup,name="user_signup")
 
 ]
