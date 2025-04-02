@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Graphy API Documentation</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      display: flex;
+    }
+    .sidebar {
+      width: 250px;
+      background: #343a40;
+      color: white;
+      height: 100vh;
+      padding: 20px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .back-button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      font-size: 14px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+    .back-button:hover {
+      background: #0056b3;
+    }
+    .sidebar h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar ul li {
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .sidebar ul li:hover {
+      background: #495057;
+    }
+    .sidebar .version {
+      font-size: 12px;
+      text-align: center;
+      margin-top: 20px;
+      opacity: 0.8;
+    }
+    .content {
+      margin-left: 300px;
+      max-width: 900px;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      flex: 1;
+    }
+    h1,
+    h2 {
+      color: #343a40;
+    }
+    pre {
+      background: #e9ecef;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    .code-tabs {
+      display: flex;
+      margin-bottom: 10px;
+    }
+    .code-tabs button {
+      padding: 8px 12px;
+      margin-right: 5px;
+      border: none;
+      cursor: pointer;
+      background: #6c757d;
+      color: white;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+    .code-tabs button.active {
+      background: #007bff;
+    }
+    .code-snippet {
+      display: none;
+    }
+    .code-snippet.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div>
+      <button class="back-button" onclick="goBack()">&#8592; Back</button>
+      <h2>Graphy API Documentation</h2>
+      <ul>
+        <li onclick="scrollToSection('upload')">File Upload</li>
+        <li onclick="scrollToSection('download')">File Download</li>
+        <li onclick="scrollToSection('supported')">Supported File Types</li>
+        <li onclick="scrollToSection('authentication')">Authentication</li>
+        <li onclick="scrollToSection('errors')">Error Handling</li>
+        <li onclick="scrollToSection('rate_limiting')">Rate Limiting</li>
+        <li onclick="scrollToSection('examples')">Code Examples</li>
+        <li onclick="scrollToSection('best_practices')">Best Practices</li>
+      </ul>
+    </div>
+    <div class="version">Graphy version 1.0</div>
+  </div>
+  <div class="content">
+
+    <h1>Graphy API Documentation</h1>
+        <p>Graphy API handles file uploads and downloads for Excel (.xlsx) and CSV (.csv) files. Every request must be authenticated using an API key.</p>
+        
+        <h2 id="upload">1. File Upload</h2>
+        <p><strong>Endpoint:</strong> <code>POST /api/graphy/upload</code></p>
+        <p>Upload only Excel or CSV files.</p>
+        <pre>{ "file": "binary file data", "api_key": "your_api_key_here" }</pre>
+        
+        <h2 id="download">2. File Download</h2>
+        <p><strong>Endpoint:</strong> <code>GET /api/graphy/download/{file_id}</code></p>
+        <p>Download a file by its ID.</p>
+        <pre>{ "file_url": "https://example.com/files/12345", "api_key": "your_api_key_here" }</pre>
+        
+        <h2 id="supported">3. Supported File Types</h2>
+        <ul>
+            <li>Excel Files (.xlsx)</li>
+            <li>CSV Files (.csv)</li>
+        </ul>
+        
+        <h2 id="authentication">4. Authentication</h2>
+        <p>Every request to the Graphy API requires an API key to be included in the request header for authentication.</p>
+        <p>Example header:</p>
+        <pre>{ "api_key": "your_api_key_here" }</pre>
+        
+        <h2 id="errors">5. Error Handling</h2>
+        <p>The API returns standard HTTP error codes. Common error responses include:</p>
+        <ul>
+            <li><strong>400 Bad Request:</strong> The request is missing required parameters or the file format is unsupported.</li>
+            <li><strong>401 Unauthorized:</strong> Invalid or missing API key.</li>
+            <li><strong>404 Not Found:</strong> The requested file could not be found.</li>
+            <li><strong>500 Internal Server Error:</strong> An error occurred on the server.</li>
+        </ul>
+        
+        <h2 id="rate_limiting">6. Rate Limiting</h2>
+        <p>To ensure fair usage, Graphy API enforces rate limiting. Exceeding the limit will result in a <strong>429 Too Many Requests</strong> error. Check the response headers for rate limit details.</p>
+
+    <h2 id="examples">7. Code Examples</h2>
+    <div class="code-tabs">
+      <button onclick="showCode('python')" class="active">Python</button>
+      <button onclick="showCode('javascript')">JavaScript</button>
+    </div>
+    <pre id="python" class="code-snippet active"># Python Example
+import requests
+files = {"file": open("data.csv", "rb")}
+headers = {"api_key": "your_api_key_here"}
+response = requests.post("https://api.example.com/graphy/upload", files=files, headers=headers)
+print(response.json())</pre>
+    <pre id="javascript" class="code-snippet">// JavaScript Example
+fetch("https://api.example.com/graphy/upload", {
+  method: "POST",
+  headers: { "api_key": "your_api_key_here" },
+  body: formData
+})
+  .then(response => response.json())
+  .then(data => console.log(data));</pre>
+  </div>
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+    function showCode(language) {
+      document.querySelectorAll(".code-snippet").forEach(el => el.classList.remove("active"));
+      document.getElementById(language).classList.add("active");
+      document.querySelectorAll(".code-tabs button").forEach(btn => btn.classList.remove("active"));
+      document.querySelector(`[onclick="showCode('${language}')"]`).classList.add("active");
+    }
+    function scrollToSection(id) {
+        console.log("Scrolling to:", id);
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+  </script>
+</body>
+</html>

@@ -24,6 +24,7 @@ urlpatterns = [
     path('files/',files,name="files",),
     path('about/',about,name="about"),
     path('pricing/',pricing,name="pricing"),
+    path('docs/',docs,name="docs"),
     path('login/',user_login,name="user_login"),
     path('signup/',user_signup,name="user_signup")
 
