@@ -1,9 +1,10 @@
 {% include 'base.html' %}
+{% load static %}
 <div class="container">
     <h1>Not magic, just Python</h1>
     <p>Here's a mindmap</p>
     <div>
-
+        <img src="{% static 'images/mind.jpg' %}" alt="Mind Map" style="width: 80%; max-width: 600px; border-radius: 27px; box-shadow: 0px 4px 10px rgba(67, 67, 67, 0.2);" /> 
     </div>
     <br>
     <a href="{% url "home" %}" class="start-now-btn">Go back <-</a>
