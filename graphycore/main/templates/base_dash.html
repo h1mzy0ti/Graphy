@@ -1,0 +1,339 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Graphy Dashboard{% endblock %}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 70px;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .sidebar-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar-icon:hover {
+            background-color: #d5d5d5;
+        }
+
+        .sidebar-icon.active {
+            background-color: #222;
+        }
+
+        .sidebar-icon.active svg path,
+        .sidebar-icon.active svg rect,
+        .sidebar-icon.active svg circle {
+            stroke: #fff;
+        }
+
+        .sidebar-icon a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 12000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header-text h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .header-text p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .export-btn {
+            background-color: #f05545;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(240, 85, 69, 0.3);
+        }
+
+        .profile-container {
+            position: relative;
+        }
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #131313;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .profile-icon:hover {
+            background-color: #82ed3b;
+        }
+
+        .profile-icon img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 150px;
+            z-index: 100;
+            overflow: hidden;
+            display: none;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 12px 15px;
+            text-decoration: none;
+            color: #131313;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f4f4f4;
+            color: #82ed3b;
+        }
+
+        .storage-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .storage-circle {
+            width: 40px;
+            height: 40px;
+            position: relative;
+        }
+
+        .storage-circle-bg {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid #eee;
+        }
+
+        .storage-circle-progress {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: #7cdb2e;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: rotate(calc({{ storage_percent|default:0 }} * 3.6deg));
+        }
+
+        .storage-text {
+            font-size: 12px;
+            color: #666;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .charts-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        {% block extra_css %}{% endblock %}
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Dashboard -->
+            <div class="sidebar-icon {% if section == 'dashboard' %}active{% endif %}" title="Dashboard">
+                <a href="{% url 'dashboard' %}">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 9L12 2L21 9V20C21 20.53 20.79 21.04 20.41 21.41C20.04 21.79 19.53 22 19 22H5C4.47 22 3.96 21.79 3.59 21.41C3.21 21.04 3 20.53 3 20V9Z" stroke="#555" stroke-width="2"/>
+                    </svg>
+                </a>
+            </div>
+    
+            <!-- Analytics -->
+            <div class="sidebar-icon {% if section == 'analytics' %}active{% endif %}" title="Analytics">
+                <a href="{% url 'analytics' %}">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="4" y="4" width="16" height="16" rx="2" stroke="#555" stroke-width="2"/>
+                    </svg>
+                </a>
+            </div>
+    
+            <!-- Files -->
+            <div class="sidebar-icon {% if section == 'files' %}active{% endif %}" title="Files">
+                <a href="{% url 'uploaded' %}">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 15C21 15.53 20.79 16.04 20.41 16.41C20.04 16.79 19.53 17 19 17H7L3 21V5C3 4.47 3.21 3.96 3.59 3.59C3.96 3.21 4.47 3 5 3H19C19.53 3 20.04 3.21 20.41 3.59C20.79 3.96 21 4.47 21 5V15Z"
+                        stroke="#555" stroke-width="2"/>
+                    </svg>
+                </a>
+            </div>
+    
+            <!-- Search -->
+            <div class="sidebar-icon {% if section == 'search' %}active{% endif %}" title="Search">
+                <a href="{% url 'search' %}">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="11" cy="11" r="8" stroke="#555" stroke-width="2"/>
+                        <path d="M21 21L16.65 16.65" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </a>
+            </div>
+    
+            <!-- Logs -->
+            <div class="sidebar-icon {% if section == 'logs' %}active{% endif %}" title="Logs">
+                <a href="{% url 'logs' %}">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 6H21" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M3 12H21" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M3 18H21" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="container">
+                <header>
+                    <div class="header-text">
+                        <h1>{% block header_title %}Hey, {{ user.get_full_name|default:user.username }}{% endblock %} have a nice day</h1>
+                        <p>{% block header_subtitle %}Here's your report for {{ report_month|default:"April, 2025" }}{% endblock %}</p>
+                    </div>
+                    <div class="header-actions">
+                        {% block header_actions %}
+                        <div class="storage-indicator">
+                            <div class="storage-circle">
+                                <div class="storage-circle-bg"></div>
+                                <div class="storage-circle-progress"></div>
+                            </div>
+                            <div class="storage-text">
+                                <div>{{ storage_percent|default:0 }}% used</div>
+                                <div>{{ storage_used|default:0 }} MB / {{ storage_total|default:50 }} MB</div>
+                            </div>
+                        </div>
+                        <div class="profile-container">
+                            <div class="profile-icon" id="profileIcon">
+                                <img src="{% static 'images/user.png' %}" alt="Profile"
+                                    onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\'></path><circle cx=\'12\' cy=\'7\' r=\'4\'></circle></svg>'">
+                            </div>
+                            <div class="dropdown-menu" id="profileDropdown">
+                                <a href="#" class="dropdown-item">Profile</a>
+                                <a href="#" class="dropdown-item">Premium</a>
+                                {% if user.is_authenticated %}
+                                    <a href="{% url 'logout' %}" class="dropdown-item">Logout</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endblock %}
+                    </div>
+                </header>
+
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    document.getElementById("profileIcon")?.addEventListener("click", function () {
+        document.getElementById("profileDropdown")?.classList.toggle("show");
+    });
+
+    window.addEventListener("click", function (event) {
+        if (!event.target.closest(".profile-container")) {
+            document.getElementById("profileDropdown")?.classList.remove("show");
+        }
+    });
+</script>

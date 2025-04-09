@@ -18,14 +18,29 @@ from django.contrib import admin
 from django.urls import path
 from main.views import *
 from django.contrib.auth import views as auth_views
+from django.conf.urls.static import static
 handler404 = custom_404_view 
+
+
 urlpatterns = [
     path('', home,name="home"),
-    path('files/',files,name="files",),
+    path('files/', files, name='files'),
+    path('upload/', upload_file, name='upload_file'),
+    path('dashboard/', dashboard_view, name='dashboard'),
+    path('analytics/', analytics_view, name='analytics'),
+    path('uploaded/', uploaded, name='uploaded'),
+    path('download/<int:file_id>/', download_file, name='download_file'),
+    path('delete/<int:file_id>/', delete_file, name='delete_file'),
+    path('analytics/clean/', clean_analyzed_data, name='clean_analyzed_data'),
+    path('search/', search_view, name='search'),
+    path('logs/', logs_view, name='logs'),
     path('about/',about,name="about"),
     path('pricing/',pricing,name="pricing"),
     path('docs/',docs,name="docs"),
     path('login/',user_login,name="user_login"),
-    path('signup/',user_signup,name="user_signup")
+    path('signup/',user_signup,name="user_signup"),
+     path('logout/', logout_view, name='logout'),
 
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

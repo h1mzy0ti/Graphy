@@ -1,0 +1,100 @@
+{% extends "base_dash.html" %}
+{% block title %}Search Files{% endblock %}
+
+{% block content %}
+<style>
+    .search-container {
+        margin-bottom: 30px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 10px 15px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+
+    .search-button {
+        padding: 10px 20px;
+        background-color: #1f1f20;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .search-button:hover {
+        background-color: #82ed3b;
+        color: #131313;
+    }
+
+    .result-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .result-item {
+        padding: 12px 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.2s;
+    }
+
+    .result-item:hover {
+        background-color: #e6f4dc;
+    }
+
+    .result-name {
+        font-weight: 500;
+    }
+
+    .result-actions a {
+        margin-left: 10px;
+        text-decoration: none;
+        font-size: 13px;
+        padding: 6px 12px;
+        border-radius: 6px;
+        color: white;
+        background-color: #1f1f20;
+        transition: 0.3s;
+    }
+
+    .result-actions a:hover {
+        background-color: #82ed3b;
+        color: #131313;
+    }
+</style>
+
+<h2>🔍 Search Files</h2>
+
+<form method="GET" class="search-container">
+    <input type="text" name="q" class="search-input" value="{{ query }}" placeholder="Search by file name..." required>
+    <button type="submit" class="search-button">Search</button>
+</form>
+
+{% if query and results %}
+    <p><strong>{{ results|length }}</strong> file(s) found for "<em>{{ query }}</em>":</p>
+    <ul class="result-list">
+        {% for file in results %}
+        <li class="result-item">
+            <span class="result-name">{{ file }}</span>
+            <div class="result-actions">
+                <a href="{{ MEDIA_URL }}uploads/{{ request.user.username }}/{{ file }}">Download</a>
+                <a href="{% url 'analytics' %}?file_name={{ file }}">Analytics</a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+{% elif query %}
+    <p>No results found for "<em>{{ query }}</em>".</p>
+{% endif %}
+{% endblock %}
