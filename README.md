@@ -16,7 +16,9 @@
 ---
 
 ## 🖼️ Screenshots
-
+<div align="center">
+<img src="images/0.png" width="50%" style="margin: 10px;">
+</div>
 <div align="center">
   <img src="images/1.png" width="45%" style="margin: 10px;">
   <img src="images/2.png" width="45%" style="margin: 10px;"><br>
