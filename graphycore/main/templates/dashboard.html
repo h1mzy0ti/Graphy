@@ -1,1 +1,33 @@
-{% include 'base_dash.html' %}
+{% extends "base_dash.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- Storage Usage -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3">📦 Storage Overview</h5>
+            <p class="mb-1">Used <strong>{{ storage_used }} MB</strong> of <strong>{{ storage_total }} MB</strong> available.</p>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <!-- Quick Actions -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <a href="{% url 'analytics' %}" class="btn btn-outline-success w-100 py-3 shadow-sm">📊 Analyze Data</a>
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'files' %}" class="btn btn-outline-warning w-100 py-3 shadow-sm">⬆️ Upload New File</a>
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'uploaded' %}" class="btn btn-outline-primary w-100 py-3 shadow-sm">📁 View Uploaded Files</a>
+        </div>
+    </div>
+    <br>
+    
+</div>
+
+{% endblock %}

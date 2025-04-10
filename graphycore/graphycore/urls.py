@@ -27,6 +27,7 @@ urlpatterns = [
     path('files/', files, name='files'),
     path('upload/', upload_file, name='upload_file'),
     path('dashboard/', dashboard_view, name='dashboard'),
+    path('profile/',profile_view,name='profile_view'),
     path('analytics/', analytics_view, name='analytics'),
     path('uploaded/', uploaded, name='uploaded'),
     path('download/<int:file_id>/', download_file, name='download_file'),
@@ -39,7 +40,9 @@ urlpatterns = [
     path('docs/',docs,name="docs"),
     path('login/',user_login,name="user_login"),
     path('signup/',user_signup,name="user_signup"),
-     path('logout/', logout_view, name='logout'),
+    path('logout/', logout_view, name='logout')
+    
+
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth import logout
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login,logout, authenticate,update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User 
@@ -102,6 +101,9 @@ def analytics_view(request):
     chart_files = []
     output_folder = os.path.join(settings.MEDIA_ROOT, 'charts', user.username)
 
+    used = get_user_storage_usage(request.user)
+    percent_used = round((used / 50) * 100)
+
     if file_id:
         try:
             file_to_analyze = UploadedFile.objects.get(id=file_id, user=user)
@@ -137,7 +139,10 @@ def analytics_view(request):
         'chart_files': chart_files,
         'media_url': settings.MEDIA_URL,
         'chart_folder': base_name if file_id else '',
-        'user': user
+        'user': user,
+        'storage_used': used,
+        'storage_total': 50,
+        'storage_percent': percent_used
     })
 @login_required
 @require_POST
@@ -198,6 +203,9 @@ def uploaded(request):
     user = request.user
     files = UploadedFile.objects.filter(user=user)
 
+    used = get_user_storage_usage(request.user)
+    percent_used = round((used / 50) * 100)
+
     if request.method == 'POST' and request.FILES.get('file'):
         uploaded_file = request.FILES['file']
         allowed_extensions = ['.csv', '.xls', '.xlsx']
@@ -230,7 +238,10 @@ def uploaded(request):
         return redirect('uploaded')
 
     return render(request, "uploaded.html", {
-        'files': files
+        'files': files,
+        'storage_used': used,
+        'storage_total': 50,
+        'storage_percent': percent_used
     })
 
 @login_required
@@ -252,6 +263,10 @@ def download_file(request, file_id):
 def search_view(request):
     query = request.GET.get('q', '')
     results = []
+
+    used = get_user_storage_usage(request.user)
+    percent_used = round((used / 50) * 100)
+
     if query:
         path = os.path.join(settings.MEDIA_ROOT, 'uploads', request.user.username)
         if os.path.exists(path):
@@ -259,12 +274,18 @@ def search_view(request):
     return render(request, 'search.html', {
         'section': 'search',
         'results': results,
-        'query': query
+        'query': query,
+        'storage_used': used,
+        'storage_total': 50,
+        'storage_percent': percent_used
     })
 @login_required
 def logs_view(request):
     path = os.path.join(settings.MEDIA_ROOT, 'uploads', request.user.username)
     file_logs = []
+
+    used = get_user_storage_usage(request.user)
+    percent_used = round((used / 50) * 100)
 
     if os.path.exists(path):
         for f in os.listdir(path):
@@ -276,6 +297,9 @@ def logs_view(request):
 
     return render(request, 'logs.html', {
         'section': 'logs',
+        'storage_used': used,
+        'storage_total': 50,
+        'storage_percent': percent_used,
         'logs': sorted(file_logs, key=lambda x: x['uploaded_on'], reverse=True)
     })
 
@@ -330,3 +354,17 @@ def user_login(request):
 def logout_view(request):
     logout(request)
     return redirect("home")
+
+@login_required
+def profile_view(request):
+    if request.method == "POST":
+        new_password = request.POST.get("new_password")
+
+        user = request.user
+        user.set_password(new_password)
+        update_session_auth_hash(request, user)
+        
+
+
+    return render(request,"profile.html")
+
