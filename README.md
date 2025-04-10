@@ -30,7 +30,9 @@
 
 ## 🛠️ Built With
 
-- **Backend:** [Python](https://www.python.org/), [Django](https://www.djangoproject.com/)
+- **Backend:**  
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)  
+[![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)](https://www.djangoproject.com/)
 - **Frontend:** HTML, CSS, JavaScript
 - **Database:** SQLite (default, can be swapped)
 - **Authentication:** Django's built-in user system
