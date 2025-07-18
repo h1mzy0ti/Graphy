@@ -1,0 +1,48 @@
+{% extends "base_dash.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container py-5">
+    <h2 class="mb-4 fw-bold">👤 Profile Settings</h2>
+
+    <div class="row g-4">
+        <!-- Profile Info -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">📇 Account Information</h5>
+                    <p><strong>Username:</strong> {{ user.username }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Plan:</strong> 
+                        <span class="badge bg-primary">{{ plan_type|default:"Free" }}</span>
+                    </p>
+                    <a href="{% url 'pricing' %}" class="btn btn-outline-success mt-3">🚀 Upgrade Plan</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Password Update -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">🔒 Change Password</h5>
+                    <form method="post" action="{% url 'profile_view' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">New Password</label>
+                            <input type="password" name="new_password" id="3" class="form-control" placeholder="Enter new password" required>
+                        </div>
+                        <button type="submit" class="btn btn-outline-primary">Update Password</button>
+                        {% if password_success %}
+                            <p class="text-success mt-2">✅ Password updated successfully!</p>
+                        {% elif password_error %}
+                            <p class="text-danger mt-2">❌ {{ password_error }}</p>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

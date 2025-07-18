@@ -1,0 +1,69 @@
+{% extends "base_dash.html" %}
+{% block title %}Activity Logs{% endblock %}
+
+{% block content %}
+<style>
+    .log-section {
+        margin-bottom: 30px;
+    }
+
+    .log-section h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 5px;
+        color: #333;
+    }
+
+    .log-item {
+        padding: 10px 15px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .log-time {
+        font-size: 12px;
+        color: #888;
+    }
+</style>
+
+<h2>📑 Your Activity Logs</h2>
+
+<div class="log-section">
+    <h3>🆕 Account Events</h3>
+    <div class="log-item">
+        <span>Account created</span>
+        <span class="log-time">{{ user.date_joined|date:"M d, Y H:i" }}</span>
+    </div>
+</div>
+
+<div class="log-section">
+    <h3>📁 Uploaded Files</h3>
+    {% if logs %}
+        {% for log in logs %}
+        <div class="log-item">
+            <span>{{ log.name }}</span>
+            <span class="log-time">{{ log.uploaded_on|date:"M d, Y H:i" }}</span>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No file uploads yet.</p>
+    {% endif %}
+</div>
+
+<div class="log-section">
+    <h3>💾 Storage Usage</h3>
+    <div class="log-item">
+        <span>Total Storage Used</span>
+        <span class="log-time">
+            {{ storage_used }} MB / {{ storage_total|default:50 }} MB
+        </span>
+    </div>
+</div>
+
+{% endblock %}

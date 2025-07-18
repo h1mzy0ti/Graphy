@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@5.20.1"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "data": {"name": "data-479a8332bc339a571e7613767b2d8ee0"}, "mark": {"type": "bar"}, "encoding": {"x": {"bin": true, "field": "number_of_people_bought", "type": "quantitative"}, "y": {"aggregate": "count", "type": "quantitative"}}, "height": 300, "title": "Altair Histogram of number_of_people_bought", "width": 500, "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json", "datasets": {"data-479a8332bc339a571e7613767b2d8ee0": [{"product_name": "Laptop", "number_of_people_bought": 25, "other_items": "Mouse;Keyboard;Bag"}, {"product_name": "Smartphone", "number_of_people_bought": 40, "other_items": "Earphones;Charger;Case"}, {"product_name": "Smartwatch", "number_of_people_bought": 18, "other_items": "Strap;Screen Protector"}, {"product_name": "Tablet", "number_of_people_bought": 15, "other_items": "Stylus;Cover"}, {"product_name": "Camera", "number_of_people_bought": 12, "other_items": "Tripod;Memory Card;Bag"}, {"product_name": "Headphones", "number_of_people_bought": 30, "other_items": "Case;Extra Cable"}, {"product_name": "Monitor", "number_of_people_bought": 20, "other_items": "HDMI Cable;Stand"}, {"product_name": "Printer", "number_of_people_bought": 10, "other_items": "Ink;Paper;USB Cable"}, {"product_name": "Gaming Console", "number_of_people_bought": 22, "other_items": "Controller;Game;Headset"}, {"product_name": "Router", "number_of_people_bought": 17, "other_items": "Ethernet Cable;Antenna"}, {"product_name": "External Hard Drive", "number_of_people_bought": 14, "other_items": "Case;USB Cable"}, {"product_name": "Drone", "number_of_people_bought": 9, "other_items": "Battery;Camera"}, {"product_name": "Speaker", "number_of_people_bought": 28, "other_items": "Charger;Cable"}, {"product_name": "Projector", "number_of_people_bought": 11, "other_items": "Screen;Remote"}, {"product_name": "VR Headset", "number_of_people_bought": 8, "other_items": "Controllers;Cable"}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>

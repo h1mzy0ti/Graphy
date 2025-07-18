@@ -1,0 +1,233 @@
+{% extends "base_dash.html" %}
+{% load static %}
+
+{% block title %}Analytics{% endblock %}
+{% block header_subtitle %}Analyze and explore your uploaded files{% endblock %}
+
+{% block content %}
+<style>
+    .analytics-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .upload-analyze-btn,
+    .back-btn {
+        background-color: #1f1f20;
+        color: white;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 10px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.3s ease;
+        text-decoration: none;
+    }
+
+    .upload-analyze-btn:hover,
+    .back-btn:hover {
+        background-color: #82ed3b;
+        color: #131313;
+    }
+
+    .file-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 20px;
+        transition: 0.4s;
+    }
+
+    .file-card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        padding: 20px;
+        position: relative;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: default;
+    }
+
+    .file-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    }
+
+    .file-name {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #333;
+        word-break: break-word;
+    }
+
+    .file-options {
+        display: none;
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .file-card:hover .file-options {
+        display: flex;
+    }
+
+    .file-button {
+        flex: 1;
+        background-color: #1f1f20;
+        color: white;
+        padding: 6px 10px;
+        border: none;
+        border-radius: 8px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .file-button:hover {
+        background-color: #82ed3b;
+        color: #131313;
+    }
+
+    .analyze-box {
+        background: #fefefe;
+        padding: 50px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        text-align: center;
+        margin: 80px auto;
+        max-width: 90%;
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .no-files-msg {
+        text-align: center;
+        font-size: 16px;
+        color: #888;
+        margin-top: 40px;
+    }
+
+    .chart-grid {
+        margin-top: 40px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+    }
+
+    .chart-card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+        overflow: hidden;
+        padding: 10px;
+    }
+
+    .chart-card img,
+    .chart-card iframe {
+        width: 100%;
+        height: 300px;
+        object-fit: contain;
+        border-radius: 6px;
+        border: none;
+    }
+
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.8);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+    .loading-overlay.active {
+        display: flex;
+    }
+
+    .spinner {
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #1f1f20;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div class="analytics-header">
+    {% if not analyzed_file %}
+        <h2>Files available for analysis</h2>
+        <form action="{% url 'files' %}" method="GET">
+            <button type="submit" class="upload-analyze-btn">Upload & Analyze</button>
+        </form>
+    {% else %}
+        <a href="{% url 'analytics' %}" class="back-btn">← Back</a>
+    {% endif %}
+</div>
+
+{% if files and not analyzed_file %}
+    <div class="file-grid">
+        {% for file in files %}
+            <div class="file-card">
+                <div class="file-name">{{ file.name }}</div>
+                <div class="file-options">
+                    <form method="GET" action="{% url 'analytics' %}" onsubmit="showLoading()">
+                        <input type="hidden" name="analyze" value="{{ file.id }}">
+                        <button class="file-button">Analyze</button>
+                    </form>
+                    <form method="POST" action="{% url 'clean_analyzed_data' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="file_id" value="{{ file.id }}">
+                        <button class="file-button" style="background-color: orangered;">🧼 Clean Charts</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% elif not files %}
+    <p class="no-files-msg">No files uploaded yet.</p>
+{% endif %}
+
+{% if analyzed_file %}
+    <div class="analyze-box">
+        <h3>🔍 Analyzing: {{ analyzed_file.name }}</h3>
+        <div class="chart-grid">
+            {% for chart in chart_files %}
+                <div class="chart-card">
+                    {% if chart|slice:"-4:" == ".png" %}
+                        <img src="{{ media_url }}charts/{{ user.username }}/{{ chart_folder }}/{{ chart }}" alt="{{ chart }}">
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+</div>
+
+<script>
+    function showLoading() {
+        document.getElementById("loadingOverlay").classList.add("active");
+    }
+</script>
+{% endblock %}
