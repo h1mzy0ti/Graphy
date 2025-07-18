@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@5.20.1"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "data": {"name": "data-d3fbd990656acca33798ef40ee8a2acb"}, "mark": {"type": "bar"}, "encoding": {"x": {"bin": true, "field": "Marks (History)", "type": "quantitative"}, "y": {"aggregate": "count", "type": "quantitative"}}, "height": 300, "title": "Altair Histogram of Marks (History)", "width": 500, "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json", "datasets": {"data-d3fbd990656acca33798ef40ee8a2acb": [{"Student": "Student 1", "Total Marks": 388, "Marks (Math)": 95, "Marks (Science)": 74, "Marks (English)": 57, "Marks (History)": 84, "Marks (Art)": 78, "Guide": "Mr. Smith", "Overall": 77.6}, {"Student": "Student 2", "Total Marks": 332, "Marks (Math)": 72, "Marks (Science)": 72, "Marks (English)": 58, "Marks (History)": 53, "Marks (Art)": 77, "Guide": "Ms. Johnson", "Overall": 66.4}, {"Student": "Student 3", "Total Marks": 388, "Marks (Math)": 86, "Marks (Science)": 75, "Marks (English)": 54, "Marks (History)": 84, "Marks (Art)": 89, "Guide": "Mr. Smith", "Overall": 77.6}, {"Student": "Student 4", "Total Marks": 349, "Marks (Math)": 51, "Marks (Science)": 59, "Marks (English)": 86, "Marks (History)": 97, "Marks (Art)": 56, "Guide": "Dr. Lee", "Overall": 69.8}, {"Student": "Student 5", "Total Marks": 390, "Marks (Math)": 57, "Marks (Science)": 54, "Marks (English)": 91, "Marks (History)": 97, "Marks (Art)": 91, "Guide": "Mrs. Brown", "Overall": 78.0}, {"Student": "Student 6", "Total Marks": 346, "Marks (Math)": 64, "Marks (Science)": 73, "Marks (English)": 62, "Marks (History)": 72, "Marks (Art)": 75, "Guide": "Dr. Lee", "Overall": 69.2}, {"Student": "Student 7", "Total Marks": 383, "Marks (Math)": 64, "Marks (Science)": 86, "Marks (English)": 82, "Marks (History)": 63, "Marks (Art)": 88, "Guide": "Mrs. Brown", "Overall": 76.6}, {"Student": "Student 8", "Total Marks": 397, "Marks (Math)": 80, "Marks (Science)": 62, "Marks (English)": 91, "Marks (History)": 66, "Marks (Art)": 98, "Guide": "Ms. Johnson", "Overall": 79.4}, {"Student": "Student 9", "Total Marks": 344, "Marks (Math)": 92, "Marks (Science)": 50, "Marks (English)": 91, "Marks (History)": 57, "Marks (Art)": 54, "Guide": "Mr. Smith", "Overall": 68.8}, {"Student": "Student 10", "Total Marks": 403, "Marks (Math)": 60, "Marks (Science)": 91, "Marks (English)": 97, "Marks (History)": 78, "Marks (Art)": 77, "Guide": "Ms. Johnson", "Overall": 80.6}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>
